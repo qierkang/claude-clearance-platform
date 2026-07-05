@@ -13,58 +13,76 @@ const stats = lang === 'zh'
 
 <footer>
   <div class="wrap">
-    <p class="footer__line">
-      <span>{t('footer.disclaimer')}</span>
-      <a
-        href="https://github.com/qierkang/claude-clearance-platform"
-        target="_blank"
-        rel="noopener noreferrer"
-        data-ga-event="repo_click"
-        data-ga-id="footer"
-      >
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path
-            d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.3-1.8-1.3-1.8-1.1-.7 0-.7 0-.7 1.2 0 1.9 1.2 1.9 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2 0-.4-.5-1.6.2-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.6.2 2.8.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5Z"
-          ></path>
-        </svg>
-        GitHub
-      </a>
-      <span><b data-stat="totalVisits">0</b> {stats.visits}</span>
-      <span><b data-stat="messageCount">0</b> {stats.messages}</span>
-    </p>
+    <div class="footer__stack">
+      <p class="footer__disclaimer">{t('footer.disclaimer')}</p>
+      <div class="footer__meta">
+        <a
+          href="https://github.com/qierkang/claude-clearance-platform"
+          target="_blank"
+          rel="noopener noreferrer"
+          data-ga-event="repo_click"
+          data-ga-id="footer"
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+            <path
+              d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.3-1.8-1.3-1.8-1.1-.7 0-.7 0-.7 1.2 0 1.9 1.2 1.9 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2 0-.4-.5-1.6.2-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.6.2 2.8.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5Z"
+            ></path>
+          </svg>
+          GitHub
+        </a>
+        <span><b data-stat="totalVisits">0</b> {stats.visits}</span>
+        <span><b data-stat="messageCount">0</b> {stats.messages}</span>
+      </div>
+    </div>
   </div>
 </footer>
 
 <style>
-  .footer__line {
+  .footer__stack {
+    display: grid;
+    gap: 10px;
+  }
+  .footer__disclaimer {
     margin: 0;
+    line-height: 1.7;
+    color: var(--muted-2);
+    font-size: 0.78rem;
+  }
+  .footer__meta {
     display: flex;
     align-items: center;
-    gap: 14px;
-    overflow-x: auto;
+    flex-wrap: wrap;
+    gap: 10px 14px;
     color: var(--muted-2);
     font-size: 0.74rem;
-    white-space: nowrap;
-    scrollbar-width: none;
   }
-  .footer__line::-webkit-scrollbar {
-    display: none;
-  }
-  .footer__line a {
+  .footer__meta a {
     display: inline-flex;
     align-items: center;
     gap: 5px;
     color: var(--muted);
   }
-  .footer__line a:hover {
+  .footer__meta a:hover {
     color: var(--accent-strong);
   }
-  .footer__line svg {
+  .footer__meta svg {
     flex: none;
   }
-  .footer__line b {
+  .footer__meta b {
     color: inherit;
     font-family: var(--mono);
     font-weight: 500;
+  }
+  @media (max-width: 560px) {
+    .footer__stack {
+      gap: 12px;
+    }
+    .footer__disclaimer {
+      font-size: 0.74rem;
+    }
+    .footer__meta {
+      gap: 8px 12px;
+      font-size: 0.72rem;
+    }
   }
 </style>

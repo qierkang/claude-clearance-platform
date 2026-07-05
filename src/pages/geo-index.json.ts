@@ -4,7 +4,7 @@ export const prerender = true;
 
 export const GET: APIRoute = ({ site }) => {
   const configuredSite =
-    import.meta.env.PUBLIC_SITE_URL || site?.href || 'https://claude-clearance-platform.vercel.app';
+    import.meta.env.PUBLIC_SITE_URL || site?.href || 'http://claude.qekang.com';
   const siteRoot = configuredSite.endsWith('/') ? configuredSite : `${configuredSite}/`;
   const url = (path: string) => new URL(path.replace(/^\/+/, ''), siteRoot).href;
 

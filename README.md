@@ -195,9 +195,9 @@ claude-clearance-platform/
 
 | 层级 | 技术或资产 | 说明 |
 |---|---|---|
-| 前端框架 | Astro 7 | 静态页面 + Vercel Function |
+| 前端框架 | Astro 7 | 自托管 Node 服务 + Astro 页面 |
 | 语言 | TypeScript | 检测逻辑、API 估算、分享卡片 |
-| 部署适配 | `@astrojs/vercel` | `/api/check` 作为按需函数 |
+| 部署适配 | `@astrojs/node` | 自托管 API 与页面路由 |
 | 本地检测 | Browser APIs | `Intl`、`navigator`、Canvas、UA |
 | 图谱 | graphify | 生成 `graphify-out/GRAPH_REPORT.md` |
 | 图片资产 | image_gen | 顶部图、架构图、UI 图、流程图 |

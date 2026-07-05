@@ -6,7 +6,7 @@
   "description": "Local-first Claude environment and network-exit risk checker upgraded from FuckClaude.",
   "license": "MIT",
   "author": "qierkang <xyqierkang@gmail.com>",
-  "homepage": "https://claude-clearance-platform.vercel.app",
+  "homepage": "http://claude.qekang.com",
   "repository": {
     "type": "git",
     "url": "https://github.com/qierkang/claude-clearance-platform.git"
@@ -22,8 +22,8 @@
     "db:setup": "pnpm db:start && pnpm db:migrate && pnpm db:seed"
   },
   "dependencies": {
+    "@astrojs/node": "^11.0.2",
     "@astrojs/sitemap": "^3.7.3",
-    "@astrojs/vercel": "^11.0.2",
     "astro": "^7.0.5",
     "pg": "^8.22.0"
   },

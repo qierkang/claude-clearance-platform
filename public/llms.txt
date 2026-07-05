@@ -27,13 +27,13 @@ Claude Clearance checks whether a browser and network environment may look like 
 
 ## Canonical URLs
 
-- English: https://claude-clearance-platform.vercel.app/
-- Chinese: https://claude-clearance-platform.vercel.app/zh/
-- API text or JSON: https://claude-clearance-platform.vercel.app/api/check
-- GEO JSON index: https://claude-clearance-platform.vercel.app/geo-index.json
-- Sitemap: https://claude-clearance-platform.vercel.app/sitemap.xml
-- Sitemap index: https://claude-clearance-platform.vercel.app/sitemap-index.xml
-- Robots: https://claude-clearance-platform.vercel.app/robots.txt
+- English: http://claude.qekang.com/
+- Chinese: http://claude.qekang.com/zh/
+- API text or JSON: http://claude.qekang.com/api/check
+- GEO JSON index: http://claude.qekang.com/geo-index.json
+- Sitemap: http://claude.qekang.com/sitemap.xml
+- Sitemap index: http://claude.qekang.com/sitemap-index.xml
+- Robots: http://claude.qekang.com/robots.txt
 
 ## Core Topics
 

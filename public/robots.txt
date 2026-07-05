@@ -34,5 +34,5 @@ Allow: /
 User-agent: Applebot
 Allow: /
 
-Sitemap: https://claude-clearance-platform.vercel.app/sitemap.xml
-Sitemap: https://claude-clearance-platform.vercel.app/sitemap-index.xml
+Sitemap: http://claude.qekang.com/sitemap.xml
+Sitemap: http://claude.qekang.com/sitemap-index.xml

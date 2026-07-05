@@ -181,9 +181,9 @@ claude-clearance-platform/
 
 | Layer | Technology or asset | Notes |
 |---|---|---|
-| Frontend | Astro 7 | Static pages plus Vercel Function |
+| Frontend | Astro 7 | Self-hosted Node server plus Astro pages |
 | Language | TypeScript | Detection logic, API estimate, and UI scripts |
-| Deployment adapter | `@astrojs/vercel` | `/api/check` as on-demand function |
+| Deployment adapter | `@astrojs/node` | Self-hosted API and page routes |
 | Local scan | Browser APIs | `Intl`, `navigator`, Canvas, UA |
 | Database | PostgreSQL | Community wall messages and visit stats |
 | Graph | graphify | Generates `graphify-out/GRAPH_REPORT.md` |

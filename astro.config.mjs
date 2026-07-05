@@ -1,22 +1,20 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
-import vercel from '@astrojs/vercel';
+import node from '@astrojs/node';
 
 // `site` must match the real deployment origin so canonical URLs,
 // hreflang links and the generated sitemap point to the correct domain.
 //
-// Output stays `static` (every page is prerendered); the Vercel adapter is
-// only here so the single on-demand route `src/pages/api/check.ts`
-// (`export const prerender = false`) can run as a Vercel Function and read the
-// request's geo headers for the curl/API endpoint.
 export default defineConfig({
-  site: 'https://claude-clearance-platform.vercel.app',
+  site: process.env.PUBLIC_SITE_URL || 'http://claude.qekang.com',
   devToolbar: {
     enabled: false,
   },
-  output: 'static',
-  adapter: vercel(),
+  output: 'server',
+  adapter: node({
+    mode: 'standalone',
+  }),
   i18n: {
     locales: ['en', 'zh'],
     defaultLocale: 'en',

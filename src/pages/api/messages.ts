@@ -33,7 +33,7 @@ export const POST: APIRoute = async ({ request, cookies, url }) => {
     const identity = requestIdentity({
       request,
       cookies,
-      secureCookie: url.protocol === 'https:',
+      secureCookie: (request.headers.get('x-forwarded-proto') || url.protocol.replace(':', '')) === 'https',
     });
     const message = await createMessage({
       authorName: body.authorName,
