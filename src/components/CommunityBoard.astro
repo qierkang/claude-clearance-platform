@@ -1,0 +1,592 @@
+---
+import type { Lang } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const isZh = lang === 'zh';
+
+const labels = isZh
+  ? {
+      title: '通关留言墙',
+      sub: '路过的朋友可以留下通关姿势、踩坑记录和今日狗头分数。',
+      visits: '有效访问',
+      uniques: '独立访客',
+      day: '24h 访问',
+      messages: '留言',
+      name: '昵称',
+      namePlaceholder: '匿名访客',
+      randomize: '换一个昵称',
+      composer: '写一句',
+      content: '留言内容',
+      contentPlaceholder: '说说你的 Claude 环境、出口线路或踩坑记录，可带 Emoji 🐶',
+      submit: '发布留言',
+      loading: '正在召唤留言...',
+      empty: '还没有留言，抢第一条。',
+    }
+  : {
+      title: 'Clearance Wall',
+      sub: 'Drop your clearance notes, route stories and today’s dog-score.',
+      visits: 'Counted visits',
+      uniques: 'Unique visitors',
+      day: '24h visits',
+      messages: 'Messages',
+      name: 'Name',
+      namePlaceholder: 'Anonymous',
+      randomize: 'New random name',
+      composer: 'Say something',
+      content: 'Message',
+      contentPlaceholder: 'Share your Claude environment, exit route or notes. Emoji welcome 🐶',
+      submit: 'Post message',
+      loading: 'Summoning messages...',
+      empty: 'No messages yet.',
+    };
+---
+
+<section
+  id="community-sec"
+  class="community"
+  data-community
+  data-lang={lang}
+  aria-labelledby="community-title"
+>
+  <div class="community__panel">
+    <div class="community__head">
+      <div>
+        <h2 id="community-title">{labels.title}</h2>
+        <p>{labels.sub}</p>
+      </div>
+      <p class="community__status" data-community-status aria-live="polite">{labels.loading}</p>
+    </div>
+
+    <div class="community__ticker">
+      <div class="community__list" id="community-list" aria-live="polite">
+        <p class="community__empty">{labels.loading}</p>
+      </div>
+    </div>
+
+    <form class="community__form" id="community-form">
+      <div class="community__composer-head">
+        <span>{labels.composer}</span>
+        <div class="community__identity">
+          <input
+            id="community-author"
+            name="authorName"
+            maxlength="48"
+            autocomplete="nickname"
+            placeholder={labels.namePlaceholder}
+            aria-label={labels.name}
+          />
+          <button class="community__shuffle" type="button" data-random-name title={labels.randomize} aria-label={labels.randomize}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M16 3h5v5" /><path d="M4 20 21 3" /><path d="M21 16v5h-5" /><path d="m15 15 6 6" /><path d="M4 4l5 5" />
+            </svg>
+          </button>
+        </div>
+      </div>
+      <label class="community__field">
+        <span class="sr-only">{labels.content}</span>
+        <textarea
+          id="community-content"
+          name="content"
+          maxlength="500"
+          rows="3"
+          required
+          placeholder={labels.contentPlaceholder}
+        ></textarea>
+      </label>
+      <span class="community__feedback" data-form-status aria-live="polite"></span>
+      <div class="community__form-foot">
+        <div class="community__emoji" aria-label="Emoji">
+          {['🐶', '👍', '🔥'].map((emoji) => <button type="button" data-emoji={emoji}>{emoji}</button>)}
+        </div>
+        <span class="community__count"><b data-message-count>0</b>/500</span>
+        <button class="community__submit" type="submit">
+          <span>{labels.submit}</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M5 12h14" />
+            <path d="m13 6 6 6-6 6" />
+          </svg>
+        </button>
+      </div>
+    </form>
+
+    <p class="community__empty" id="community-empty" hidden>{labels.empty}</p>
+  </div>
+</section>
+
+<style>
+  .community {
+    min-width: 0;
+    padding: 0;
+    text-align: left;
+    align-self: start;
+  }
+  .community__panel {
+    position: relative;
+    display: grid;
+    grid-template-rows: auto minmax(170px, 1fr) auto;
+    gap: 12px;
+    height: clamp(500px, calc(100vh - 230px), 620px);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: color-mix(in srgb, var(--surface) 92%, var(--bg));
+    box-shadow: var(--shadow-md);
+    padding: 18px;
+    overflow: hidden;
+  }
+  .community__panel::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    border-radius: inherit;
+    background:
+      radial-gradient(circle at 18% 4%, rgba(217, 119, 87, 0.13), transparent 24%),
+      radial-gradient(circle at 94% 84%, rgba(34, 138, 111, 0.1), transparent 26%);
+    opacity: 0.9;
+    pointer-events: none;
+  }
+  .community__panel > * {
+    position: relative;
+    z-index: 1;
+  }
+  .community__head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .community__head h2 {
+    margin: 0 0 5px;
+    font-family: var(--serif);
+    font-size: 1.22rem;
+    line-height: 1.2;
+    letter-spacing: 0;
+  }
+  .community__head p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.78rem;
+    line-height: 1.5;
+  }
+  .community__status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin: 1px 0 0;
+    flex: none;
+    color: var(--low);
+    font-size: 0.72rem;
+    font-weight: 700;
+    white-space: nowrap;
+    padding: 4px 8px;
+    border: 1px solid color-mix(in srgb, var(--low) 24%, transparent);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--low) 7%, var(--surface));
+  }
+  .community__status::before {
+    content: '';
+    width: 7px;
+    height: 7px;
+    border-radius: 999px;
+    background: currentColor;
+    box-shadow: 0 0 0 4px color-mix(in srgb, currentColor 12%, transparent);
+    animation: community-live 1.8s ease-in-out infinite;
+  }
+  .community__form {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 6px;
+    padding: 9px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface);
+    box-shadow: var(--shadow-sm);
+    margin: 0;
+    transition:
+      border-color 0.22s,
+      box-shadow 0.22s,
+      transform 0.22s;
+  }
+  .community__form:focus-within {
+    border-color: color-mix(in srgb, var(--accent) 62%, var(--border));
+    box-shadow:
+      var(--shadow-sm),
+      0 12px 36px rgba(217, 119, 87, 0.12);
+    transform: translateY(-1px);
+  }
+  .community__form label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+  }
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  .community__form label span:not(.sr-only),
+  .community__composer-head > span {
+    color: var(--muted);
+    font-size: 0.72rem;
+    font-weight: 650;
+  }
+  .community__composer-head,
+  .community__form-foot,
+  .community__identity,
+  .community__emoji {
+    display: flex;
+    align-items: center;
+  }
+  .community__composer-head {
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .community__composer-head > span {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--text);
+    font-weight: 750;
+  }
+  .community__composer-head > span::before {
+    content: '';
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 4px var(--accent-soft);
+  }
+  .community__identity {
+    min-width: 0;
+    gap: 5px;
+  }
+  .community__form input,
+  .community__form textarea {
+    width: 100%;
+    border: 1px solid var(--border-strong);
+    border-radius: 8px;
+    background: var(--bg);
+    color: var(--text);
+    font: inherit;
+    font-size: 0.82rem;
+    outline: none;
+    transition:
+      border-color 0.18s,
+      box-shadow 0.18s,
+      background 0.18s;
+  }
+  .community__form input {
+    width: min(118px, 36vw);
+    min-height: 30px;
+    padding: 5px 7px;
+    border-radius: 999px;
+    text-align: right;
+  }
+  .community__form textarea {
+    min-height: 48px;
+    max-height: 68px;
+    padding: 7px 9px;
+    resize: vertical;
+  }
+  .community__shuffle,
+  .community__emoji button {
+    display: inline-grid;
+    place-items: center;
+    flex: none;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--muted);
+    cursor: pointer;
+  }
+  .community__shuffle {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+  }
+  .community__shuffle:hover {
+    color: var(--accent-strong);
+    border-color: var(--accent);
+    transform: rotate(90deg);
+  }
+  .community__shuffle svg {
+    width: 13px;
+    height: 13px;
+  }
+  .community__form-foot {
+    gap: 8px;
+  }
+  .community__emoji {
+    gap: 4px;
+  }
+  .community__emoji button {
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border-radius: 50%;
+    font-size: 0.78rem;
+  }
+  .community__emoji button:hover {
+    transform: translateY(-2px) scale(1.08);
+    border-color: var(--accent);
+  }
+  .community__count {
+    margin-left: auto;
+    color: var(--muted-2);
+    font-family: var(--mono);
+    font-size: 0.66rem;
+  }
+  .community__feedback {
+    display: block;
+    height: 1.35em;
+    color: var(--low);
+    font-size: 0.68rem;
+    font-weight: 700;
+    line-height: 1.35;
+    text-align: right;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .community__feedback[data-tone='error'] {
+    color: var(--high);
+  }
+  .community__count b {
+    font-weight: 500;
+  }
+  .community__form input:focus,
+  .community__form textarea:focus {
+    border-color: var(--accent);
+    background: var(--surface);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+  }
+  .community__submit {
+    position: relative;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 34px;
+    padding: 7px 13px;
+    border: 0;
+    border-radius: 999px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+    color: #fff;
+    font: inherit;
+    font-size: 0.84rem;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    box-shadow: 0 9px 22px rgba(217, 119, 87, 0.22);
+    transition:
+      transform 0.18s,
+      box-shadow 0.18s,
+      filter 0.18s;
+  }
+  .community__submit::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(110deg, transparent 0 36%, rgba(255, 255, 255, 0.32) 48%, transparent 62% 100%);
+    transform: translateX(-120%);
+    transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .community__submit:hover {
+    filter: saturate(1.06);
+    transform: translateY(-1px);
+    box-shadow: 0 12px 28px rgba(192, 95, 60, 0.27);
+  }
+  .community__submit:hover::before {
+    transform: translateX(120%);
+  }
+  .community__submit:disabled {
+    opacity: 0.55;
+    cursor: wait;
+  }
+  .community__submit svg {
+    position: relative;
+    width: 15px;
+    height: 15px;
+  }
+  .community__submit span {
+    position: relative;
+  }
+  .community__ticker {
+    position: relative;
+    height: 100%;
+    min-height: 170px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: none;
+    border-radius: 8px;
+  }
+  .community__ticker::-webkit-scrollbar {
+    display: none;
+  }
+  .community__ticker::selection {
+    background: transparent;
+  }
+  .community__ticker::before,
+  .community__ticker::after {
+    content: '';
+    position: absolute;
+    z-index: 2;
+    left: 0;
+    right: 0;
+    height: 42px;
+    pointer-events: none;
+  }
+  .community__ticker::before {
+    top: 0;
+    background: linear-gradient(to bottom, color-mix(in srgb, var(--surface) 94%, var(--bg)), transparent);
+  }
+  .community__ticker::after {
+    bottom: 0;
+    background: linear-gradient(to top, color-mix(in srgb, var(--surface) 94%, var(--bg)), transparent);
+  }
+  .community__ticker {
+    mask-image: linear-gradient(to bottom, transparent 0, #000 12%, #000 88%, transparent 100%);
+  }
+  .community__list {
+    position: relative;
+    display: grid;
+    align-content: start;
+    gap: 6px;
+    padding: 0 2px 0 7px;
+  }
+  :global(.community-message) {
+    position: relative;
+    border: 1px solid color-mix(in srgb, var(--border) 86%, transparent);
+    border-radius: 8px;
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(255, 255, 255, 0.96)),
+      var(--surface);
+    padding: 7px 9px;
+    box-shadow:
+      0 1px 2px rgba(29, 37, 44, 0.04),
+      0 8px 20px rgba(29, 37, 44, 0.06);
+    transition:
+      transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+      border-color 0.25s,
+      box-shadow 0.25s;
+  }
+  :global(.community-message::before) {
+    content: '';
+    position: absolute;
+    inset: 8px auto 8px 5px;
+    width: 2px;
+    border-radius: 999px;
+    background: linear-gradient(to bottom, transparent, color-mix(in srgb, var(--accent) 48%, transparent), transparent);
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+  :global(.community-message:hover) {
+    transform: translateY(-1px);
+    border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
+    box-shadow:
+      0 1px 2px rgba(29, 37, 44, 0.04),
+      0 12px 28px rgba(217, 119, 87, 0.12);
+  }
+  :global(.community-message:hover::before) {
+    opacity: 1;
+  }
+  :global(.community-message.is-new) {
+    border-color: color-mix(in srgb, var(--accent) 70%, var(--border));
+    animation: community-message-in 0.62s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  :global(.community-message__meta) {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 2px;
+  }
+  :global(.community-message__author) {
+    color: var(--text);
+    font-weight: 750;
+    line-height: 1.3;
+    font-size: 0.74rem;
+  }
+  :global(.community-message__time) {
+    flex: none;
+    color: var(--muted-2);
+    font-family: var(--mono);
+    font-size: 0.56rem;
+  }
+  :global(.community-message__body) {
+    margin: 0;
+    color: var(--muted);
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    font-size: 0.68rem;
+    line-height: 1.42;
+    overflow-wrap: anywhere;
+  }
+  .community__empty {
+    margin: 10px 0 0;
+    color: var(--muted);
+    font-size: 0.82rem;
+  }
+  @keyframes community-message-in {
+    from {
+      opacity: 0;
+      transform: translateY(18px) scale(0.96);
+      filter: blur(5px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      filter: blur(0);
+    }
+  }
+  @keyframes community-live {
+    0%,
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.58;
+      transform: scale(1.32);
+    }
+  }
+  @media (max-width: 1100px) {
+    .community__panel {
+      height: 600px;
+      grid-template-rows: auto minmax(240px, 1fr) auto;
+    }
+  }
+  @media (max-width: 580px) {
+    .community__panel {
+      padding: 14px;
+    }
+    .community__head {
+      display: block;
+    }
+    .community__status {
+      margin-top: 7px;
+    }
+    :global(.community-message__meta) {
+      display: block;
+    }
+    :global(.community-message__time) {
+      display: block;
+      margin-top: 2px;
+    }
+  }
+</style>

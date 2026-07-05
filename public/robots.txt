@@ -1,0 +1,38 @@
+User-agent: *
+Allow: /
+Allow: /llms.txt
+Allow: /geo-index.json
+Allow: /api/check
+
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Baiduspider
+Allow: /
+
+User-agent: Sogou web spider
+Allow: /
+
+User-agent: 360Spider
+Allow: /
+
+User-agent: GPTBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+Sitemap: https://claude-clearance-platform.vercel.app/sitemap.xml
+Sitemap: https://claude-clearance-platform.vercel.app/sitemap-index.xml

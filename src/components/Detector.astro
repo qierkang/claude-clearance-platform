@@ -1,0 +1,853 @@
+---
+import { useTranslations, type Lang } from '../i18n/ui';
+import { SIGNALS } from '../config/signals';
+import LangToggle from './LangToggle.astro';
+import ScoreRing from './ScoreRing.astro';
+import Mascot from './Mascot.astro';
+import CnModels from './CnModels.astro';
+import CommunityBoard from './CommunityBoard.astro';
+import Footer from './Footer.astro';
+
+interface Props {
+  lang: Lang;
+  path: string;
+}
+const { lang } = Astro.props;
+const t = useTranslations(lang);
+const home = lang === 'zh' ? '/zh/' : '/';
+const heroTitle = t('hero.title');
+const heroTitleChars = Array.from(heroTitle);
+
+const API_BASE = new URL('/api/check', Astro.url).href;
+const apiExamples = [
+  { comment: t('api.ex1'), cmd: `curl ${API_BASE}` },
+  { comment: t('api.ex2'), cmd: `curl -H "Accept-Language: zh" ${API_BASE}` },
+  { comment: t('api.ex3'), cmd: `curl ${API_BASE}?format=json` },
+];
+
+const matrixCards = [
+  {
+    tone: 'local',
+    title: t('matrix.local.title'),
+    body: t('matrix.local.body'),
+    items: lang === 'zh' ? ['系统时区', '浏览器语言', '中文字体', 'Intl Locale'] : ['OS timezone', 'Browser language', 'Chinese fonts', 'Intl locale'],
+  },
+  {
+    tone: 'network',
+    title: t('matrix.network.title'),
+    body: t('matrix.network.body'),
+    items: lang === 'zh' ? ['出口 IP', 'ASN / 国家', 'WebRTC 泄漏', 'DNS 泄漏'] : ['Exit IP', 'ASN / country', 'WebRTC leak', 'DNS leak'],
+  },
+  {
+    tone: 'evidence',
+    title: t('matrix.evidence.title'),
+    body: t('matrix.evidence.body'),
+    items: lang === 'zh' ? ['来源', '可信度', '风险贡献', '修复建议'] : ['Source', 'Confidence', 'Contribution', 'Fix guidance'],
+  },
+];
+---
+
+<header class="nav">
+  <div class="wrap nav__inner">
+    <a class="brand" href={home}>
+      <svg viewBox="0 0 64 64" aria-hidden="true">
+        <rect width="64" height="64" rx="14" fill="currentColor"></rect>
+        <g fill="#FAF9F5">
+          <rect x="26.9" y="8" width="7.6" height="29" rx="3.8"></rect>
+          <rect x="18.9" y="24.5" width="6.4" height="11" rx="3.2"></rect>
+          <rect x="36.1" y="24.5" width="6.4" height="11" rx="3.2"></rect>
+          <rect x="16.9" y="30" width="27.6" height="24" rx="9"></rect>
+          <rect x="40.6" y="32.5" width="7.6" height="16" rx="3.8" transform="rotate(-24 44.4 40.5)"></rect>
+        </g>
+      </svg>
+      <span class="brand__text">{t('nav.title')}</span>
+    </a>
+    <nav class="nav__actions">
+      <LangToggle lang={lang} />
+      <a
+        class="icon-link"
+        href="https://github.com/qierkang/claude-clearance-platform"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="GitHub"
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.3-1.8-1.3-1.8-1.1-.7 0-.7 0-.7 1.2 0 1.9 1.2 1.9 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-5.9 0-1.3.5-2.4 1.2-3.2 0-.4-.5-1.6.2-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.6.2 2.8.1 3.2.8.8 1.2 1.9 1.2 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5Z"></path>
+        </svg>
+      </a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <div class="credit">
+      <span class="credit__spark" aria-hidden="true"></span>
+      <span class="credit__text">{t('credit')}</span>
+    </div>
+    <p class="credit-note">{t('hero.badge.builtWithFable')}</p>
+
+    <h1 class="split-title" aria-label={heroTitle}>
+      <span class="split-title__text" aria-hidden="true">
+        {
+          heroTitleChars.map((char, index) => (
+            <span
+              class="split-title__char"
+              style={`--i:${index};`}
+            >
+              {char === ' ' ? '\u00A0' : char}
+            </span>
+          ))
+        }
+      </span>
+    </h1>
+
+    <div class="hero-grid">
+      <div class="panel">
+        <div class="panel__main">
+          <Mascot />
+          <ScoreRing lang={lang} />
+        </div>
+
+        <div class="result" id="result" hidden>
+          <p class="result__title" id="result-title"></p>
+          <div class="result__hits" id="result-hits"></div>
+        </div>
+
+        <div class="scan-log" id="scan-log" aria-live="polite" hidden></div>
+      </div>
+
+      <CommunityBoard lang={lang} />
+    </div>
+  </section>
+
+  <section id="scan-sec" aria-labelledby="scan-title">
+    <div class="section-head">
+      <h2 id="scan-title">{t('signals.title')}</h2>
+      <p>{t('signals.sub')}</p>
+    </div>
+    <ol class="scan-list" id="scan">
+      {
+        SIGNALS.map((signal) => (
+          <li class="scan-row is-pending" data-signal={signal.id}>
+            <span class="scan-row__icon" set:html={signal.icon} />
+            <span class="scan-row__main">
+              <span class="scan-row__name">
+                {t(`signal.${signal.id}.name`)}
+                <span class="badge">{t('ui.weight')} {signal.weight}</span>
+                {signal.claudeUsed && <span class="badge badge--claude">{t('ui.claudeBadge')}</span>}
+              </span>
+              <span class="scan-row__desc">{t(`signal.${signal.id}.desc`)}</span>
+            </span>
+            <span class="scan-row__status">
+              <span class="scan-row__value" data-field="value" />
+              <span class="scan-row__contrib" data-field="contribution" />
+              <span class="dot" data-field="dot" />
+              <span class="spinner" aria-hidden="true" />
+            </span>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <section id="matrix-sec" aria-labelledby="matrix-title">
+    <div class="section-head">
+      <h2 id="matrix-title">{t('matrix.title')}</h2>
+      <p>{t('matrix.sub')}</p>
+    </div>
+    <div class="clearance-matrix">
+      {
+        matrixCards.map((card, index) => (
+          <article class="matrix-card" data-tone={card.tone}>
+            <span class="matrix-card__index">{String(index + 1).padStart(2, '0')}</span>
+            <div class="matrix-card__head">
+              <span class="matrix-card__mark" aria-hidden="true" />
+              <h3>{card.title}</h3>
+            </div>
+            <p>{card.body}</p>
+            <div class="matrix-card__chips">
+              {card.items.map((item) => (
+                <span>{item}</span>
+              ))}
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <section id="how-sec" aria-labelledby="how-title">
+    <div class="section-head">
+      <h2 id="how-title">{t('how.title')}</h2>
+    </div>
+    <div class="how-panel">
+      <article>
+        <span>{lang === 'zh' ? '公开线索' : 'Public signals'}</span>
+        <p>{t('how.p1')}</p>
+      </article>
+      <article>
+        <span>{lang === 'zh' ? '网页可测' : 'Browser-visible'}</span>
+        <p>{t('how.p2')}</p>
+      </article>
+    </div>
+  </section>
+
+  <section id="api-sec" aria-labelledby="api-title">
+    <div class="section-head">
+      <h2 id="api-title">{t('api.title')}</h2>
+      <p>{t('api.desc')}</p>
+    </div>
+    <div class="api-cmd">
+      <button
+        class="api-cmd__copy"
+        id="api-copy"
+        type="button"
+        data-copy={`curl ${API_BASE}`}
+        data-ga-event="api_copy"
+        data-ga-id="curl"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+        <span id="api-copy-label">{t('share.copy')}</span>
+      </button>
+      <div class="api-cmd__code">
+        {
+          apiExamples.map((ex) => (
+            <div class="api-cmd__block">
+              <span class="api-cmd__c">{ex.comment}</span>
+              <code class="api-cmd__l">
+                <span class="api-cmd__p" aria-hidden="true">$</span> {ex.cmd}
+              </code>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <CnModels lang={lang} />
+
+  <section id="faq-sec" aria-labelledby="faq-title">
+    <div class="section-head">
+      <h2 id="faq-title">{t('faq.title')}</h2>
+    </div>
+    <div class="faq">
+      {
+        [1, 2, 3, 4].map((i) => (
+          <details>
+            <summary>{t(`faq.q${i}`)}</summary>
+            <p>{t(`faq.a${i}`)}</p>
+          </details>
+        ))
+      }
+    </div>
+  </section>
+
+  <section id="privacy-sec">
+    <div class="privacy">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="5" y="11" width="14" height="9" rx="2"></rect>
+        <path d="M8 11V8a4 4 0 0 1 8 0v3"></path>
+      </svg>
+      <div>
+        <h2>{t('privacy.title')}</h2>
+        <p>{t('privacy.body')}</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="impact-fx" id="impact-fx" aria-hidden="true">
+  <span class="impact-fx__flash"></span>
+  <span class="impact-fx__projectile"></span>
+  <span class="impact-fx__burst"></span>
+  <svg class="impact-fx__crack-scene" id="impact-crack-scene" aria-hidden="true"></svg>
+</div>
+
+<Footer lang={lang} />
+
+<script>
+  import '../scripts/detect';
+  import '../scripts/community';
+</script>
+
+<style>
+  main.wrap {
+    max-width: min(1500px, calc(100vw - 40px));
+  }
+
+  .brand__text {
+    max-width: 52vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(330px, 390px);
+    align-items: stretch;
+    gap: 18px;
+    margin: 18px auto 0;
+  }
+
+  .hero-grid .panel {
+    margin: 0;
+  }
+
+  .scan-log {
+    width: min(760px, 88%);
+    margin: 22px auto 0;
+    display: grid;
+    gap: 8px;
+    text-align: left;
+    opacity: 0;
+    transform: translateY(10px);
+    transition:
+      opacity 0.28s ease,
+      transform 0.28s ease;
+  }
+  .scan-log.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .scan-log.is-exiting {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  .scan-log :global(.scan-log__row) {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 10px;
+    min-height: 38px;
+    padding: 8px 12px;
+    border: 1px solid color-mix(in srgb, var(--border) 86%, transparent);
+    border-radius: 8px;
+    background:
+      linear-gradient(135deg, rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.72)),
+      color-mix(in srgb, var(--surface) 92%, var(--bg));
+    box-shadow: 0 8px 24px rgba(29, 37, 44, 0.06);
+    animation: scan-log-in 0.32s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  .scan-log :global(.scan-log__dot) {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: var(--muted-2);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--muted-2) 12%, transparent);
+  }
+  .scan-log :global(.scan-log__row[data-status='checking'] .scan-log__dot) {
+    background: var(--medium);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--medium) 14%, transparent);
+    animation: scan-log-pulse 0.9s ease-in-out infinite;
+  }
+  .scan-log :global(.scan-log__row[data-status='hit'] .scan-log__dot) {
+    background: var(--high);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--high) 13%, transparent);
+  }
+  .scan-log :global(.scan-log__row[data-status='miss'] .scan-log__dot) {
+    background: var(--low);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--low) 13%, transparent);
+  }
+  .scan-log :global(.scan-log__main) {
+    min-width: 0;
+  }
+  .scan-log :global(.scan-log__name) {
+    display: block;
+    overflow: hidden;
+    color: var(--text);
+    font-size: 0.78rem;
+    font-weight: 760;
+    line-height: 1.3;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .scan-log :global(.scan-log__value) {
+    display: block;
+    overflow: hidden;
+    color: var(--muted-2);
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    line-height: 1.35;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .scan-log :global(.scan-log__state) {
+    flex: none;
+    color: var(--muted);
+    font-size: 0.72rem;
+    font-weight: 780;
+    white-space: nowrap;
+  }
+  .scan-log :global(.scan-log__row[data-status='hit'] .scan-log__state) {
+    color: var(--high);
+  }
+  .scan-log :global(.scan-log__row[data-status='miss'] .scan-log__state) {
+    color: var(--low);
+  }
+
+  .impact-fx {
+    --shot-x: 40vw;
+    --shot-y: 36vh;
+    --impact-x: 58vw;
+    --impact-y: 38vh;
+    --shot-angle: 0deg;
+    --shot-dist: 420px;
+    position: fixed;
+    z-index: 998;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+    overflow: hidden;
+  }
+  .impact-fx.is-active {
+    opacity: 1;
+  }
+  .impact-fx__flash {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at var(--impact-x) var(--impact-y), rgba(255, 255, 255, 0.94), rgba(255, 255, 255, 0.12) 18%, transparent 38%),
+      radial-gradient(circle at var(--shot-x) var(--shot-y), rgba(255, 214, 136, 0.82), transparent 10%);
+    opacity: 0;
+  }
+  .impact-fx.is-active .impact-fx__flash {
+    animation: impact-flash 1.4s ease-out both;
+  }
+  .impact-fx__projectile {
+    position: absolute;
+    left: var(--shot-x);
+    top: var(--shot-y);
+    width: 90px;
+    height: 6px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0), #fff4ba 32%, #f0783e 78%, rgba(240, 120, 62, 0));
+    box-shadow:
+      0 0 16px rgba(240, 120, 62, 0.8),
+      0 0 42px rgba(240, 120, 62, 0.3);
+    opacity: 0;
+    transform-origin: left center;
+  }
+  .impact-fx.is-active .impact-fx__projectile {
+    animation: impact-projectile 0.42s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  .impact-fx__burst {
+    position: absolute;
+    left: var(--impact-x);
+    top: var(--impact-y);
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background:
+      radial-gradient(circle, rgba(29, 37, 44, 0.9) 0 17%, rgba(255, 255, 255, 0.95) 19% 31%, #f7b267 34% 47%, rgba(217, 119, 87, 0.35) 54%, transparent 68%);
+    box-shadow: 0 0 0 0 rgba(217, 119, 87, 0.34);
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.4);
+  }
+  .impact-fx.is-active .impact-fx__burst {
+    animation: impact-burst 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.28s both;
+  }
+  .impact-fx__crack-scene {
+    position: absolute;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    opacity: 0;
+    overflow: visible;
+    filter:
+      drop-shadow(0 1px 0 rgba(255, 255, 255, 0.7))
+      drop-shadow(0 12px 22px rgba(29, 37, 44, 0.13));
+    transform-origin: var(--impact-x) var(--impact-y);
+  }
+  .impact-fx__crack-scene :global(.shatter-hole) {
+    fill: rgba(23, 28, 34, 0.9);
+    stroke: rgba(255, 255, 255, 0.92);
+    stroke-width: 2.2;
+  }
+  .impact-fx__crack-scene :global(.shatter-ray) {
+    fill: none;
+    stroke: rgba(40, 48, 55, 0.62);
+    stroke-width: 2.2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .impact-fx__crack-scene :global(.shatter-ray--bright) {
+    stroke: rgba(255, 255, 255, 0.78);
+    stroke-width: 1.1;
+  }
+  .impact-fx__crack-scene :global(.shatter-branch) {
+    fill: none;
+    stroke: rgba(40, 48, 55, 0.44);
+    stroke-width: 1.35;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .impact-fx__crack-scene :global(.shatter-ring) {
+    fill: rgba(255, 255, 255, 0.025);
+    stroke: rgba(255, 255, 255, 0.42);
+    stroke-width: 1;
+  }
+  .impact-fx.is-active .impact-fx__crack-scene {
+    animation: impact-crack 1.75s cubic-bezier(0.16, 1, 0.3, 1) 0.28s both;
+  }
+  :global(html.impact-shake body) {
+    animation: impact-shake 0.48s steps(2, end);
+  }
+
+  .credit-note {
+    margin: -6px auto 14px;
+    color: var(--muted-2);
+    font-size: 0.78rem;
+    font-weight: 650;
+    letter-spacing: 0;
+  }
+
+  .api-cmd {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 14px 16px 16px;
+    border-radius: var(--radius-sm);
+    background: var(--text);
+    color: #f5f3ec;
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+  }
+  .api-cmd__code {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .api-cmd__block {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .api-cmd__c {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: #93b79a;
+  }
+  .api-cmd__l {
+    display: block;
+    font-family: var(--mono);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 2px;
+  }
+  .api-cmd__p {
+    color: var(--accent);
+    font-weight: 700;
+    user-select: none;
+  }
+  .api-cmd__copy {
+    align-self: flex-end;
+    margin-bottom: 12px;
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(245, 243, 236, 0.25);
+    background: rgba(245, 243, 236, 0.1);
+    color: #f5f3ec;
+    font: inherit;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition:
+      background 0.18s,
+      border-color 0.18s;
+  }
+  .api-cmd__copy:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+  .api-cmd__copy.is-copied {
+    background: var(--low);
+    border-color: var(--low);
+    color: #fff;
+  }
+  .api-cmd__copy svg {
+    width: 14px;
+    height: 14px;
+    flex: none;
+  }
+
+  .clearance-matrix {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+  }
+  .matrix-card {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: start;
+    column-gap: 12px;
+    row-gap: 9px;
+    min-width: 0;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background:
+      linear-gradient(135deg, color-mix(in srgb, var(--surface) 96%, var(--accent-soft)), var(--surface) 56%),
+      var(--surface);
+    padding: 14px;
+    box-shadow: var(--shadow-sm);
+  }
+  .matrix-card__index {
+    grid-row: 1 / span 3;
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--surface-2);
+    color: var(--muted-2);
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    font-weight: 800;
+  }
+  .matrix-card__head {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    min-width: 0;
+  }
+  .matrix-card__mark {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+    flex: none;
+  }
+  .matrix-card[data-tone='local'] .matrix-card__mark {
+    background: var(--low);
+    box-shadow: 0 0 0 4px rgba(34, 138, 111, 0.12);
+  }
+  .matrix-card[data-tone='network'] .matrix-card__mark {
+    background: var(--medium);
+    box-shadow: 0 0 0 4px rgba(181, 129, 33, 0.14);
+  }
+  .matrix-card[data-tone='evidence'] .matrix-card__mark {
+    background: var(--high);
+    box-shadow: 0 0 0 4px rgba(191, 77, 61, 0.12);
+  }
+  .matrix-card h3 {
+    margin: 0;
+    font-size: 0.96rem;
+    line-height: 1.3;
+  }
+  .matrix-card p {
+    grid-column: 2;
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.82rem;
+    line-height: 1.5;
+  }
+  .matrix-card__chips {
+    grid-column: 2;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 1px;
+  }
+  .matrix-card__chips span {
+    display: inline-flex;
+    align-items: center;
+    min-height: 22px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: var(--surface-2);
+    color: var(--text);
+    font-size: 0.68rem;
+    font-weight: 650;
+    white-space: nowrap;
+  }
+
+  .how-panel {
+    display: grid;
+    grid-template-columns: minmax(0, 1.08fr) minmax(0, 1fr);
+    gap: 14px;
+  }
+  .how-panel article {
+    min-width: 0;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--surface) 94%, var(--bg));
+    box-shadow: var(--shadow-sm);
+    padding: 16px 18px;
+  }
+  .how-panel span {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    margin-bottom: 8px;
+    color: var(--accent-strong);
+    font-size: 0.72rem;
+    font-weight: 800;
+  }
+  .how-panel span::before {
+    content: '';
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+  .how-panel p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.9rem;
+    line-height: 1.68;
+  }
+
+  @media (max-width: 780px) {
+    .clearance-matrix {
+      grid-template-columns: 1fr;
+    }
+    .how-panel {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @keyframes impact-projectile {
+    0% {
+      opacity: 0;
+      transform: rotate(var(--shot-angle)) translateX(0) scaleX(0.18);
+    }
+    18% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      transform: rotate(var(--shot-angle)) translateX(var(--shot-dist)) scaleX(0.08);
+    }
+  }
+  @keyframes impact-flash {
+    0%,
+    22% {
+      opacity: 0;
+    }
+    30% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+    }
+  }
+  @keyframes impact-burst {
+    0% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.35);
+      box-shadow: 0 0 0 0 rgba(217, 119, 87, 0.32);
+    }
+    20% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+      box-shadow: 0 0 0 18px rgba(217, 119, 87, 0.08);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(1.36);
+      box-shadow: 0 0 0 60px transparent;
+    }
+  }
+  @keyframes impact-crack {
+    0% {
+      opacity: 0;
+      transform: scale(0.72) rotate(-1.8deg);
+    }
+    18% {
+      opacity: 1;
+      transform: scale(1.018) rotate(0deg);
+    }
+    78% {
+      opacity: 0.9;
+      transform: scale(1) rotate(0deg);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(1.012) rotate(0.6deg);
+    }
+  }
+  @keyframes impact-shake {
+    0%,
+    100% {
+      transform: translate(0, 0);
+    }
+    18% {
+      transform: translate(-5px, 2px);
+    }
+    34% {
+      transform: translate(4px, -3px);
+    }
+    50% {
+      transform: translate(-3px, -2px);
+    }
+    66% {
+      transform: translate(3px, 2px);
+    }
+    82% {
+      transform: translate(-2px, 1px);
+    }
+  }
+  @keyframes scan-log-in {
+    from {
+      opacity: 0;
+      transform: translateY(8px) scale(0.985);
+      filter: blur(4px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      filter: blur(0);
+    }
+  }
+  @keyframes scan-log-pulse {
+    0%,
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.55;
+      transform: scale(1.45);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .impact-fx,
+    .impact-fx * {
+      animation: none !important;
+    }
+  }
+
+  @media (max-width: 1100px) {
+    main.wrap {
+      max-width: var(--maxw);
+    }
+    .hero-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 720px) {
+    .scan-log {
+      width: 100%;
+    }
+    .scan-log :global(.scan-log__row) {
+      grid-template-columns: auto minmax(0, 1fr);
+    }
+    .scan-log :global(.scan-log__state) {
+      grid-column: 2;
+      justify-self: start;
+      margin-top: -3px;
+    }
+  }
+</style>

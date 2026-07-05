@@ -1,0 +1,20 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: claude-clearance-postgres
+    environment:
+      POSTGRES_DB: claude_clearance
+      POSTGRES_USER: claude_clearance
+      POSTGRES_PASSWORD: claude_clearance_dev
+    ports:
+      - "55432:5432"
+    volumes:
+      - claude-clearance-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U claude_clearance -d claude_clearance"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  claude-clearance-pgdata:

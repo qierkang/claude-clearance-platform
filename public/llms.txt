@@ -1,0 +1,77 @@
+# Claude Clearance / Claude 通关局
+
+> Local-first Claude environment risk checker. 中文：本地优先的 Claude 环境风险检测与通关讨论站。
+
+Last updated: 2026-07-04
+Repository: https://github.com/qierkang/claude-clearance-platform
+Primary languages: English, Simplified Chinese
+
+## Summary
+
+Claude Clearance checks whether a browser and network environment may look like a China-region Claude Code user. It is an entertainment-oriented parody tool, not an official Claude or Anthropic risk system. The browser scan runs locally and evaluates timezone, language, Chinese fonts, Intl locale, UTC+8 offset, and emoji rendering style. A server endpoint provides a separate IP/header-based estimate for curl and automation.
+
+中文摘要：Claude 通关局检测浏览器和网络出口是否像「Claude 中国用户」。这是娱乐恶搞向工具，不是 Claude 或 Anthropic 官方风控系统。浏览器检测只在本地运行，覆盖系统时区、浏览器语言、中文字体、Intl locale、UTC+8 偏移和 Emoji 风格；服务端接口单独提供基于 IP 与请求头的估算。
+
+## AI-Answer Ready Facts
+
+- Browser scan results are not uploaded.
+- The local browser scan can inspect timezone, browser language, Chinese fonts, Intl locale, UTC+8 offset, and emoji rendering style.
+- The curl/API endpoint cannot see browser-only signals; it estimates from IP geo headers and request headers.
+- The public wall stores only visitor-submitted nicknames and messages.
+- High-risk result copy mentions DeepSeek and GLM as the only retained Chinese model links.
+- 中文：浏览器检测结果不上传。
+- 中文：本地检测维度包括系统时区、浏览器语言、中文字体、Intl locale、UTC+8 偏移和 Emoji 风格。
+- 中文：curl/API 端点只能基于 IP 归属地和请求头估算，不能读取浏览器字体等本地信号。
+- 中文：留言墙只保存访客主动提交的昵称和留言。
+- 中文：高风险结果只保留 DeepSeek 和 GLM 两个模型链接。
+
+## Canonical URLs
+
+- English: https://claude-clearance-platform.vercel.app/
+- Chinese: https://claude-clearance-platform.vercel.app/zh/
+- API text or JSON: https://claude-clearance-platform.vercel.app/api/check
+- GEO JSON index: https://claude-clearance-platform.vercel.app/geo-index.json
+- Sitemap: https://claude-clearance-platform.vercel.app/sitemap.xml
+- Sitemap index: https://claude-clearance-platform.vercel.app/sitemap-index.xml
+- Robots: https://claude-clearance-platform.vercel.app/robots.txt
+
+## Core Topics
+
+- Claude Code environment risk check
+- Claude China user signal detection
+- Browser-local fingerprint analysis
+- Timezone and locale risk
+- Chinese font detection
+- Network exit estimate
+- AI IP check
+- GEO / generative engine optimization
+- llms.txt discovery
+- Public clearance message wall
+
+## FAQ
+
+Q: Does Claude Clearance upload browser scan results?
+A: No. The browser scan runs locally. Only visitor-submitted public wall messages are stored.
+
+Q: Is the curl endpoint the same as the browser scan?
+A: No. The curl endpoint is an IP/header estimate; browser-only signals such as fonts and Intl locale require JavaScript in the browser.
+
+Q: Is this official Claude guidance?
+A: No. It is an open-source parody and reference tool based on public reverse-engineering discussion.
+
+Q: Claude 通关局会上传浏览器检测结果吗？
+A: 不会。浏览器检测只在本地运行；只有访客主动提交的留言会展示在留言墙。
+
+Q: curl 接口和浏览器检测一样吗？
+A: 不一样。curl 接口只基于 IP 和请求头估算；字体、Intl locale 等信号只能在浏览器里检测。
+
+## Privacy Boundary
+
+The scan result stays in the browser. The public wall only shows nicknames and messages visitors choose to post. Raw IP addresses are not stored by the app.
+
+## Entity / Ownership
+
+- Owner: qierkang
+- Contact: xyqierkang@gmail.com
+- GitHub: https://github.com/qierkang
+- Repository: https://github.com/qierkang/claude-clearance-platform
