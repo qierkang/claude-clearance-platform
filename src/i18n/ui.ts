@@ -18,7 +18,7 @@ export const ui = {
       'One-click check of your browser timezone, language, Chinese fonts and locale to see if Claude Code would flag you as a China user. 100% local, nothing uploaded.',
 
     'nav.title': 'Claude Clearance',
-    'credit': 'Upgraded from FuckClaude with a local-first clearance matrix',
+    'credit': 'Local-first Claude clearance matrix',
 
     'hero.title': 'Can your Claude environment clear the gate?',
     'hero.badge.local': '100% local scan',
@@ -104,9 +104,8 @@ export const ui = {
 
     'footer.disclaimer':
       'For reference only, based on public reverse-engineering reports. Not an official statement or advice.',
-    'footer.license':
-      'Open sourced under the MIT License — redistributions must keep the original project notice.',
-    'footer.repo': 'Original project',
+    'footer.license': 'Open sourced under the MIT License.',
+    'footer.repo': 'GitHub',
 
     'share.copy': 'Copy link',
     'share.copied': 'Copied!',
@@ -210,8 +209,8 @@ export const ui = {
       '所有检测都在你的浏览器本地完成,扫描结果不会离开你的设备。留言墙只展示访客主动发布的昵称和留言内容。',
 
     'footer.disclaimer': '本工具仅供参考,基于公开逆向分析,不构成任何官方结论或建议。',
-    'footer.license': '基于 MIT 协议开源 —— 二次发布请保留原项目署名。',
-    'footer.repo': 'GitHub 原项目',
+    'footer.license': '基于 MIT 协议开源。',
+    'footer.repo': 'GitHub',
 
     'share.copy': '复制链接',
     'share.copied': '已复制！',

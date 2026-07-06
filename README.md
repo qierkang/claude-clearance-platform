@@ -9,13 +9,13 @@
 <div align="center">
   <strong>本地优先的 Claude 环境与网络出口风险检测工具</strong>
   <br>
-  <em>把 FuckClaude 的浏览器本地评分升级为「本地环境 · 网络出口 · 证据修复」三层通关矩阵</em>
+  <em>把浏览器本地评分升级为「本地环境 · 网络出口 · 证据修复」三层通关矩阵</em>
   <br><br>
   <code>Astro</code> · <code>TypeScript</code> · <code>Vercel Function</code> · <code>AGENTS.md</code>，适合开源检测工具、AI 接手与二次产品化
   <br>
   <p>先解释风险，再给出可检查的修复方向</p>
   <br>
-  <p>如果这个项目对你有用，可以给原项目和本派生思路点个 Star，让更多开发者发现它。</p>
+  <p>如果这个项目对你有用，可以点个 Star，让更多开发者发现它。</p>
 </div>
 
 <div align="center">
@@ -45,7 +45,7 @@
 
 Claude 相关检测工具很容易混在一起：浏览器能读到的是本地环境，IP 检测站看到的是网络出口，Claude Code 公开逆向报告里强调的是系统时区与代理 hostname。把这些混成一个黑盒分数，会让使用者不知道自己到底该改系统设置、浏览器语言，还是网络线路。
 
-- 原 FuckClaude 侧重浏览器本地信号，隐私边界清晰，但网络出口维度较弱。
+- 传统本地检测工具侧重浏览器本地信号，隐私边界清晰，但网络出口维度较弱。
 - Claude AI IP 检测类工具侧重出口 IP、ASN、WebRTC、DNS、分流一致性，但浏览器本地环境解释不足。
 - 很多检测结论只给“高/中/低风险”，缺少来源、可信度、贡献分和修复建议。
 - 开源项目被二次接手时，常缺 `AGENTS.md`、graphify、升级报告和可复用资产目录。
@@ -68,9 +68,9 @@ pnpm dev
 
 ## 项目概述
 
-`Claude 通关局` 是从上游开源项目 `LinXiaoTao/FuckClaude` 派生并升级的 Claude 环境风险检测平台。它保留原项目“浏览器本地检测、不上传扫描结果”的核心逻辑，同时参考 `ipinfo.cv/claude-ai-check` 这类 Claude AI IP 检测工具的公开检查维度，把出口 IP、ASN、WebRTC、DNS、分流一致性独立为网络出口层，最终形成面向开发者、代理线路使用者和 AI 工程团队的通关矩阵。
+`Claude 通关局` 是一个本地优先的 Claude 环境风险检测平台。它以“浏览器本地检测、不上传扫描结果”为核心边界，同时参考 `ipinfo.cv/claude-ai-check` 这类 Claude AI IP 检测工具的公开检查维度，把出口 IP、ASN、WebRTC、DNS、分流一致性独立为网络出口层，最终形成面向开发者、代理线路使用者和 AI 工程团队的通关矩阵。
 
-> **English summary**: Claude Clearance is a local-first Claude environment and network-exit risk checker forked from FuckClaude. It preserves the browser-only scoring baseline and adds a productized clearance matrix for local signals, network exit checks, evidence, and fix guidance.
+> **English summary**: Claude Clearance is a local-first Claude environment and network-exit risk checker. It keeps a browser-only scoring baseline and adds a productized clearance matrix for local signals, network exit checks, evidence, and fix guidance.
 >
 > If this saves you time, a Star helps others find it.
 
@@ -78,7 +78,7 @@ pnpm dev
 
 - **本地优先检测**：系统时区、浏览器语言、中文字体、Intl Locale、时区偏移和 UA/Emoji 风格在浏览器端计算，默认不上传扫描结果。
 - **网络出口分层**：出口 IP、国家、ASN、WebRTC 泄漏、DNS 泄漏和多区域分流只作为网络侧检查层规划，避免混淆本地信号和服务端可见信号。
-- **证据化评分**：沿用原项目 100 分权重模型，后续扩展时每项信号都必须说明来源、可信度、贡献分和修复建议。
+- **证据化评分**：采用 100 分权重模型，后续扩展时每项信号都必须说明来源、可信度、贡献分和修复建议。
 - **双语视觉资产**：中文根 README 使用 `zh-CN` 资产，英文 README 使用 `en` 资产，顶部介绍图、架构图、UI 图、流程图均已生成。
 - **AI 接手友好**：通过 `platform-project-skill` 补齐接手文件、升级报告、graphify 图谱和资产 manifest，方便后续 Claude / Codex / Cursor 继续开发。
 
@@ -87,7 +87,7 @@ pnpm dev
 | 方案 | 本地浏览器信号 | 网络出口维度 | 证据解释 | 双语 README/图片 | AI 接手层 |
 |---|:---:|:---:|:---:|:---:|:---:|
 | **Claude 通关局** | 是 | 规划为独立层 | 是 | 是 | 是 |
-| FuckClaude 原项目 | 是 | 有服务端估算但较轻 | 部分 | 中英同页 | 否 |
+| 本地浏览器基线方案 | 是 | 有服务端估算但较轻 | 部分 | 中英同页 | 否 |
 | Claude AI IP 检测站 | 部分 | 是 | 取决于站点 | 不确定 | 否 |
 | 手工排查时区/代理 | 分散 | 分散 | 否 | 否 | 否 |
 
@@ -283,7 +283,7 @@ graphify-out/                  代码图谱报告
 
 ### 安全边界
 
-保留原项目 MIT 署名与上游链接；不要删除原作者授权信息。不要把真实密钥、代理地址、内网地址写入 README 或示例。
+不要把真实密钥、代理地址、内网地址写入 README 或示例；公开文档只保留当前项目必要的许可证与仓库信息。
 
 ## 开发与验证
 
@@ -359,13 +359,12 @@ platform-project-skill/scripts/check-project-baseline.sh --existing .
 
 | 版本 | 日期 | 说明 |
 |---|---|---|
-| `0.1.0` | 2026-07-04 | 从 FuckClaude 派生，补齐 Claude 通关局品牌、通关矩阵 UI、AI 接手层、双语图片资产与 README 母版结构 |
+| `0.1.0` | 2026-07-04 | 补齐 Claude 通关局品牌、通关矩阵 UI、AI 接手层、双语图片资产与 README 母版结构 |
 
 更多变更见 [CHANGELOG.md](./CHANGELOG.md)。
 
 ## 致谢
 
-- `LinXiaoTao/FuckClaude`：原始浏览器本地检测工具与评分逻辑来源。
 - [Astro](https://astro.build)：静态站点与 Vercel Function 构建能力。
 - `platform-project-skill`：项目接手层、README 规则和资产校验流程。
 
@@ -381,10 +380,9 @@ platform-project-skill/scripts/check-project-baseline.sh --existing .
 
 ## 许可证
 
-本项目继承上游 MIT License。二次发布或再分发时必须保留上游项目 `LinXiaoTao/FuckClaude` 的版权与许可证声明。
+本项目基于 MIT License 开源。
 
 ## 作者
 
 - 升级与项目接手：`xyqierkang@gmail.com`
 - GitHub：<https://github.com/qierkang>
-- 上游作者：[`LinXiaoTao`](https://github.com/LinXiaoTao)

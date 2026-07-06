@@ -9,7 +9,7 @@
 <div align="center">
   <strong>Playful local-first Claude environment checker with a community wall and SEO/GEO indexing.</strong>
   <br>
-  <em>An upgraded FuckClaude fork that separates local browser signals, server-side estimates, evidence, and product handoff assets.</em>
+  <em>A local-first checker that separates local browser signals, server-side estimates, evidence, and product handoff assets.</em>
   <br><br>
   <code>Astro</code> · <code>TypeScript</code> · <code>Vercel Function</code> · <code>PostgreSQL</code> · <code>AGENTS.md</code>
   <br>
@@ -45,7 +45,7 @@
 
 Claude-related diagnostic tools often mix three different layers: what the browser can see locally, what an IP check service can see from the network, and what public reverse-engineering reports describe for Claude Code. When these are collapsed into one opaque score, users cannot tell whether they should review OS settings, browser language, proxy routes, DNS, or ASN exposure.
 
-- FuckClaude is strong at local browser signals and privacy boundaries, but its network-exit layer is lighter.
+- Local browser checkers are strong at privacy boundaries, but their network-exit layer is usually lighter.
 - Claude AI IP check tools focus on exit IP, ASN, WebRTC, DNS, and route consistency, but local browser evidence is usually less explicit.
 - Many tools only show low, medium, or high risk without source, confidence, contribution, or fix direction.
 - Forked projects are hard for AI agents to continue without `AGENTS.md`, graph reports, upgrade notes, and reusable assets.
@@ -55,7 +55,7 @@ Claude-related diagnostic tools often mix three different layers: what the brows
 
 ## Overview
 
-`Claude Clearance` is an upgraded fork of the upstream open-source project `LinXiaoTao/FuckClaude`. It preserves the original browser-local scoring baseline and adds a productized clearance matrix inspired by Claude AI IP check tools such as `ipinfo.cv/claude-ai-check`: local environment, network exit, risk score, evidence, and fix guidance.
+`Claude Clearance` is a local-first Claude environment risk checker. It keeps a browser-local scoring baseline and adds a productized clearance matrix inspired by Claude AI IP check tools such as `ipinfo.cv/claude-ai-check`: local environment, network exit, risk score, evidence, and fix guidance.
 
 If this saves you time, a Star helps others find it.
 
@@ -72,7 +72,7 @@ If this saves you time, a Star helps others find it.
 | Option | Local browser signals | Network exit layer | Evidence explanation | Bilingual README/images | AI handoff |
 |---|:---:|:---:|:---:|:---:|:---:|
 | **Claude Clearance** | Yes | Planned as a separate layer | Yes | Yes | Yes |
-| Original FuckClaude | Yes | Light server estimate | Partial | Mixed in one README | No |
+| Local browser baseline | Yes | Light server estimate | Partial | Mixed in one README | No |
 | Claude AI IP check sites | Partial | Yes | Site-dependent | Unknown | No |
 | Manual timezone/proxy checks | Scattered | Scattered | No | No | No |
 
@@ -269,7 +269,7 @@ Chinese images live under `assets/.../zh-CN/`; English images live under `assets
 
 ### Safety Boundaries
 
-Keep the upstream MIT attribution and links. Do not write real secrets, proxy endpoints, internal IPs, or private routes into README examples.
+Do not write real secrets, proxy endpoints, internal IPs, or private routes into README examples. Public docs should keep only the current project license and repository information.
 
 ## Validation
 
@@ -295,7 +295,7 @@ Pass criteria:
 
 | Item | Status |
 |---|---|
-| Project stage | `0.1.0` upgraded fork |
+| Project stage | `0.1.0` public release |
 | scaffold | Non-invasive upgrade via `platform-project-skill` |
 | assets | `STATE=asset_done` |
 | validation | `STATE=validation_done` |
@@ -345,13 +345,12 @@ Read `graphify-out/GRAPH_REPORT.md`, then inspect `src/config/signals.ts`, `src/
 
 | Version | Date | Notes |
 |---|---|---|
-| `0.1.0` | 2026-07-04 | Forked from FuckClaude; added Claude Clearance branding, clearance matrix UI, AI handoff layer, bilingual image assets, and template-style README structure |
+| `0.1.0` | 2026-07-04 | Added Claude Clearance branding, clearance matrix UI, AI handoff layer, bilingual image assets, and template-style README structure |
 
 See [CHANGELOG.md](../CHANGELOG.md) for future updates.
 
 ## Acknowledgements
 
-- `LinXiaoTao/FuckClaude`: upstream browser-local detection and scoring baseline.
 - [Astro](https://astro.build): static site and Vercel Function build support.
 - `platform-project-skill`: AI handoff workflow, README rules, and asset validation.
 
@@ -367,10 +366,9 @@ See [CHANGELOG.md](../CHANGELOG.md) for future updates.
 
 ## License
 
-This project inherits the upstream MIT License. Redistributions must preserve the copyright and license notice of the upstream project `LinXiaoTao/FuckClaude`.
+This project is open sourced under the MIT License.
 
 ## Author
 
 - Upgrade and handoff: `xyqierkang@gmail.com`
 - GitHub: <https://github.com/qierkang>
-- Upstream author: [`LinXiaoTao`](https://github.com/LinXiaoTao)

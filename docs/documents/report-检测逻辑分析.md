@@ -1,8 +1,8 @@
 # Claude 检测逻辑分析
 
-## FuckClaude 当前逻辑
+## 本地检测当前逻辑
 
-原项目是一个 Astro 单页工具，核心检测在 `src/config/signals.ts` 与 `src/scripts/detect.ts`：
+当前项目是一个 Astro 单页工具，核心检测在 `src/config/signals.ts` 与 `src/scripts/detect.ts`：
 
 - 浏览器本地检测 6 个信号：系统时区、浏览器语言、中文字体、Intl Locale、时区偏移、Emoji/UA 风格。
 - 权重合计 100：时区 30、语言 24、字体 20、Intl 10、时区偏移 8、Emoji 8。
@@ -23,11 +23,11 @@
 - 多区域出口与分流一致性。
 - 浏览器语言、时区、系统区域设置。
 
-这些维度与 FuckClaude 的本地环境检测互补：前者偏网络出口，后者偏浏览器/系统环境。
+这些维度与本地环境检测互补：前者偏网络出口，后者偏浏览器/系统环境。
 
 ## 升级版设计
 
-`Claude 通关局` 保留原项目本地优先的隐私边界，同时把 UI 升级为三层通关矩阵：
+`Claude 通关局` 保留本地优先的隐私边界，同时把 UI 升级为三层通关矩阵：
 
 - 本地环境：时区、语言、字体、Intl、Emoji/UA。
 - 网络出口：出口 IP、ASN、国家、WebRTC、DNS、分流一致性。
