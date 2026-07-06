@@ -93,7 +93,7 @@ When unsure where a check belongs, ask whether it needs server-side or third-par
 ### Prerequisites
 
 - Node.js and pnpm
-- Docker for the project-local PostgreSQL service, mapped to `127.0.0.1:55432`
+- Shared local PostgreSQL Docker container, connected through `127.0.0.1:5432/claude_clearance`
 - Local Astro development environment
 - Optional Vercel deployment for `/api/check` geo headers
 
@@ -243,9 +243,9 @@ graphify-out/                  code graph report
 | Command | Purpose |
 |---|---|
 | `pnpm install` | Install dependencies |
-| `pnpm db:setup` | Start project-local PostgreSQL, run migrations, and seed demo messages |
+| `pnpm db:setup` | Run migrations and seed demo messages on the shared PostgreSQL container |
 | `pnpm db:migrate` | Run PostgreSQL schema migration only |
-| `pnpm db:seed` | Seed 10-50 random demo messages, default 32 |
+| `pnpm db:seed` | Seed demo messages, keeping 10 by default |
 | `pnpm dev` | Start local dev server |
 | `pnpm build` | Build Astro/Vercel output |
 | `curl http://localhost:4321/api/check` | Text server-side estimate |
@@ -300,7 +300,7 @@ Pass criteria:
 | assets | `STATE=asset_done` |
 | validation | `STATE=validation_done` |
 | graphify | `72 nodes / 126 edges / 13 communities` |
-| local database | PostgreSQL Docker baseline is wired; `pnpm db:setup` initializes it |
+| local database | Reuses the shared local PostgreSQL Docker container; `pnpm db:setup` initializes it |
 | SEO/GEO | `llms.txt`, `geo-index.json`, sitemap, JSON-LD, and FAQ are present |
 | known risk | WebRTC/DNS/ASN deep checks are not wired at runtime yet |
 

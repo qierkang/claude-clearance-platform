@@ -7,7 +7,7 @@ const { Pool } = pg;
 const root = dirname(dirname(fileURLToPath(import.meta.url)));
 const connectionString =
   process.env.DATABASE_URL ||
-  'postgres://claude_clearance:claude_clearance_dev@127.0.0.1:55432/claude_clearance';
+  'postgres://claude_clearance:claude_clearance_dev@127.0.0.1:5432/claude_clearance';
 
 const pool = new Pool({ connectionString });
 

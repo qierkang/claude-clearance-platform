@@ -3,7 +3,7 @@ import pg from 'pg';
 const { Pool } = pg;
 const connectionString =
   process.env.DATABASE_URL ||
-  'postgres://claude_clearance:claude_clearance_dev@127.0.0.1:55432/claude_clearance';
+  'postgres://claude_clearance:claude_clearance_dev@127.0.0.1:5432/claude_clearance';
 
 const keepMessages = Math.max(1, Math.min(10, Number(process.env.KEEP_MESSAGE_COUNT || 10)));
 const totalVisits = Math.max(0, Number(process.env.TOTAL_VISITS || 520));

@@ -3,7 +3,7 @@ import pg from 'pg';
 const { Pool } = pg;
 
 const DEFAULT_DATABASE_URL =
-  'postgres://claude_clearance:claude_clearance_dev@127.0.0.1:55432/claude_clearance';
+  'postgres://claude_clearance:claude_clearance_dev@127.0.0.1:5432/claude_clearance';
 
 declare global {
   // eslint-disable-next-line no-var

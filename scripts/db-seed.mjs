@@ -3,7 +3,7 @@ import pg from 'pg';
 const { Pool } = pg;
 const connectionString =
   process.env.DATABASE_URL ||
-  'postgres://claude_clearance:claude_clearance_dev@127.0.0.1:55432/claude_clearance';
+  'postgres://claude_clearance:claude_clearance_dev@127.0.0.1:5432/claude_clearance';
 
 const pool = new Pool({ connectionString });
 
@@ -29,7 +29,7 @@ const poolMessages = [
   ['SEO 路人', '加 llms.txt 是个好方向，AI 搜索现在确实会读这种入口。'],
   ['GEO 玩家', '建议把 FAQ、检测维度、API endpoint 都喂给 AI 检索。'],
   ['安全边界', '留言区记得别存原始 IP，哈希就够了。'],
-  ['本地党', 'Docker PG 跑在 55432 很舒服，不影响我本机 5432。'],
+  ['本地党', '共享 PostgreSQL 跑在 5432，很适合多个项目共用。'],
   ['前端同学', '页面视觉很干净，留言墙可以再做成讨论流。'],
   ['低风险样本', '语言、时区、字体都处理后，分数终于降下来了 🙌'],
   ['高风险样本', '我这机器全中文环境，高风险一点不冤。'],

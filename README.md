@@ -108,7 +108,7 @@ pnpm dev
 ### 前置条件
 
 - Node.js 与 pnpm
-- Docker（用于项目独立 PostgreSQL，默认映射到 `127.0.0.1:55432`）
+- 本机共享 PostgreSQL Docker 容器，默认连接 `127.0.0.1:5432/claude_clearance`
 - 需要本地运行 Astro 项目
 - 可选：Vercel 部署环境，用于 `/api/check` 读取 geo header
 
@@ -255,9 +255,9 @@ graphify-out/                  代码图谱报告
 | 命令 | 作用 |
 |---|---|
 | `pnpm install` | 安装依赖 |
-| `pnpm db:setup` | 启动项目独立 PostgreSQL，执行迁移并灌入随机留言 |
+| `pnpm db:setup` | 对共享 PostgreSQL 执行迁移并灌入随机留言 |
 | `pnpm db:migrate` | 只执行 PostgreSQL schema 迁移 |
-| `pnpm db:seed` | 灌入 10-50 条随机演示留言，默认 32 条 |
+| `pnpm db:seed` | 灌入演示留言，默认保留 10 条 |
 | `pnpm dev` | 启动本地开发服务 |
 | `pnpm build` | 构建 Astro/Vercel 产物 |
 | `curl http://localhost:4321/api/check` | 文本形式服务端估算 |
@@ -314,7 +314,7 @@ platform-project-skill/scripts/check-project-baseline.sh --existing .
 | assets | `STATE=asset_done` |
 | validation | `STATE=validation_done` |
 | graphify | 已生成 `72 nodes / 126 edges / 13 communities` |
-| local database | PostgreSQL Docker baseline 已接入，`pnpm db:setup` 可初始化 |
+| local database | 复用本机共享 PostgreSQL Docker 容器，`pnpm db:setup` 可初始化 |
 | SEO/GEO | 已补 `llms.txt`、`geo-index.json`、sitemap、JSON-LD、FAQ |
 | 已知风险 | WebRTC/DNS/ASN 深检尚未接入运行时 |
 

@@ -1,33 +1,16 @@
 services:
-  claude-clearance-postgres:
-    image: docker.m.daocloud.io/library/postgres:16-alpine
-    container_name: claude-clearance-postgres-prod
-    restart: unless-stopped
-    environment:
-      POSTGRES_DB: claude_clearance
-      POSTGRES_USER: claude_clearance
-      POSTGRES_PASSWORD: claude_clearance_prod_20260706
-    volumes:
-      - ./data/postgres:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U claude_clearance -d claude_clearance"]
-      interval: 5s
-      timeout: 3s
-      retries: 20
-
   claude-clearance-app:
     image: claude-clearance-app:20260706
     container_name: claude-clearance-app
     restart: unless-stopped
-    depends_on:
-      claude-clearance-postgres:
-        condition: service_healthy
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     environment:
       NODE_ENV: production
       HOST: 0.0.0.0
       PORT: 4321
       PUBLIC_SITE_URL: http://claude.qekang.com
-      DATABASE_URL: postgres://claude_clearance:claude_clearance_prod_20260706@claude-clearance-postgres:5432/claude_clearance
+      DATABASE_URL: postgres://claude_clearance:${POSTGRES_PASSWORD}@host.docker.internal:5432/claude_clearance
       PUBLIC_GA_ID: ${PUBLIC_GA_ID:-}
     ports:
       - "17063:4321"
