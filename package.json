@@ -19,6 +19,7 @@
     "db:start": "docker compose up -d postgres",
     "db:migrate": "node scripts/db-migrate.mjs",
     "db:seed": "node scripts/db-seed.mjs",
+    "db:curate": "node scripts/db-curate.mjs",
     "db:setup": "pnpm db:start && pnpm db:migrate && pnpm db:seed"
   },
   "dependencies": {

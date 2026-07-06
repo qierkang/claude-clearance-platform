@@ -101,8 +101,8 @@ export async function getStats(): Promise<PublicStats> {
   };
 }
 
-export async function listMessages(limit = 40): Promise<PublicMessage[]> {
-  const safeLimit = Math.max(1, Math.min(80, Math.floor(limit)));
+export async function listMessages(limit = 10): Promise<PublicMessage[]> {
+  const safeLimit = Math.max(1, Math.min(10, Math.floor(limit)));
   const result = await db().query<{
     id: string;
     author_name: string;

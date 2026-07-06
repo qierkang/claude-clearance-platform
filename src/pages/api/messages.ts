@@ -19,7 +19,7 @@ function errorStatus(error: unknown): number {
 
 export const GET: APIRoute = async ({ url }) => {
   try {
-    const limit = Number(url.searchParams.get('limit') || 40);
+    const limit = Number(url.searchParams.get('limit') || 10);
     const [messages, stats] = await Promise.all([listMessages(limit), getStats()]);
     return json({ ok: true, messages, stats });
   } catch {
@@ -40,7 +40,7 @@ export const POST: APIRoute = async ({ request, cookies, url }) => {
       content: body.content,
       identity,
     });
-    const [messages, stats] = await Promise.all([listMessages(40), getStats()]);
+    const [messages, stats] = await Promise.all([listMessages(10), getStats()]);
     return json({ ok: true, message, messages, stats }, 201);
   } catch (error) {
     const status = errorStatus(error);

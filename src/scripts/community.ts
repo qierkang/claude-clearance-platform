@@ -285,7 +285,7 @@ async function recordVisit() {
 
 async function loadMessages() {
   try {
-    const response = await fetch('/api/messages?limit=40', {
+    const response = await fetch('/api/messages?limit=10', {
       headers: { Accept: 'application/json' },
     });
     const data = (await response.json()) as MessagesResponse;

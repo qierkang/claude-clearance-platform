@@ -60,7 +60,8 @@ const poolMessages = [
   ['最后一条', '希望这个留言墙以后能沉淀真实经验，而不是只看热闹。'],
 ];
 
-const targetCount = Math.max(10, Math.min(50, Number(process.env.SEED_MESSAGE_COUNT || 32)));
+const targetCount = 10;
+const initialVisits = Math.max(0, Number(process.env.SEED_TOTAL_VISITS || 520));
 const selected = [...poolMessages].sort(() => Math.random() - 0.5).slice(0, targetCount);
 
 try {
@@ -76,7 +77,14 @@ try {
     );
     inserted += result.rowCount || 0;
   }
-  console.log(`DB_SEED_OK inserted=${inserted} requested=${targetCount}`);
+  await pool.query(
+    `INSERT INTO site_stats (key, value)
+     VALUES ('total_visits', $1)
+     ON CONFLICT (key) DO UPDATE
+     SET value = GREATEST(site_stats.value, EXCLUDED.value), updated_at = now()`,
+    [initialVisits],
+  );
+  console.log(`DB_SEED_OK inserted=${inserted} requested=${targetCount} totalVisits>=${initialVisits}`);
 } catch (error) {
   console.error('DB_SEED_FAILED');
   console.error(error);
